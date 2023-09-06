@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Colour Palette Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body onload="alert_user()">
+    <script>
+        function alert_user() {
+            if ('{{ alert }}' == 'True'){
+                alert('RGB Value has been copied to the clipboard!')
+            }
+        }
+    </script>
+    <h1>Image Colour Palette Generator</h1>
+    <form action="{{ url_for('get_palette') }}" method="post" enctype="multipart/form-data">
+        <label for="img">Upload Image:</label>
+        <input type="file" name="img" id="img" formenctype="multipart/form-data">
+        <input type="submit" value="Submit Image">
+    </form>
+    <img class="img">
+    {% if palette %}
+    <div class="palette">
+        {% for color in palette %}
+            <div class="color" style="background-color:rgb{{ color }}"><a href="{{ url_for('copy_color', r=color[0], g=color[1], b=color[2]) }}">rgb{{ color }}</a></div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <script>
+        document.querySelector('input[type="file"]').addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+                let img = document.querySelector('img');
+                img.src = URL.createObjectURL(this.files[0]);
+            }
+        });
+    </script>
+</body>
+</html>
